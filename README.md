@@ -1,2 +1,3 @@
 # http_clinet_magus
-http_client
+研修用
+簡易のhttp_clientを作成しました
