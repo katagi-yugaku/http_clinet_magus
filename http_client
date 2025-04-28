@@ -25,7 +25,8 @@ def generate_GET_request(url):
     except Exception as e:
         print(f"Connection Error: {e}")
         return
-    print(f"Requst msg:{request}")
+    print("=== HTTP GET Request ===")
+    print(f"{request}")
     # 送信
     client.sendall(request.encode())
     print('Send complete')
