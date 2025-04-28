@@ -1,0 +1,46 @@
+from socket import *
+import sys
+from urllib.parse import urlparse
+
+HTTP_PORT = 80
+
+def generate_GET_request(url):
+    parsed_url = urlparse(url)
+    
+    host = parsed_url.hostname
+    path = parsed_url.path
+    if not path:
+        path = '/'
+
+    # HTTP/1.1を使う、正しいリクエスト作成
+    request = f"GET {path} HTTP/1.1\r\n"
+    request += f"Host: {host}\r\n"
+    request += "Connection: close\r\n"
+    request += "\r\n"
+    
+    try:
+        client = socket(AF_INET, SOCK_STREAM)
+        client.connect((host, HTTP_PORT))
+        print("Connection Complete") 
+    except Exception as e:
+        print(f"Connection Error: {e}")
+        return
+    print(f"Requst msg:{request}")
+    # 送信
+    client.sendall(request.encode())
+    print('Send complete')
+
+    # 受信
+    response = b''
+    while True:
+        recv_data = client.recv(1024)
+        if not recv_data:
+            break
+        response += recv_data
+
+    print(response.decode(errors='ignore'))  # decodeエラー無視（バイナリが混ざる場合）
+    client.close()
+
+if __name__ == "__main__":
+    http_url = sys.argv[1]
+    generate_GET_request(http_url)
